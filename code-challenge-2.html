@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+   <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+  <style>
+  body {
+    text-align: center;
+  }
+  @media screen and (min-width: 48em) {
+    body {
+        text-align: left;
+    }
+  }
+  .container {
+    padding-top: 10px;
+    padding-right: 0px;
+    padding-left: 0px;
+  }
+  #secret,#clear {
+    width: 100%;
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  #secret {
+    color: white;
+  }
+  #clear {
+    background-color: inherit;
+  }
+  #ghosts {
+    color: black;
+    background-color: #d3d3d3;
+    margin-top: 10px;
+    padding: 0px;
+  }
+  .ghost:not(:first-child) {
+    border-top: 5px dashed red;
+  }
+  .ghost {
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .images {
+    border-radius: 50%;
+  }
+  </style>
+</head>
+<body>
+  <div class='container'>
+
+    <div class='row'>
+      <div class='col-md-12'>
+        <input id='secret' type='text' placeholder='???'>
+      </div>
+    </div>
+
+    <div class='row'>
+      <div class='col-md-12'>
+        <button id='clear'>Clear</button>
+      </div>
+    </div>
+
+    <div id='ghosts'></div>
+  </div>
+
+  <script>
+  (function() {
+
+    $('#clear').on('click', handleClear)
+    getGhosts()
+
+    function handleClear(event) {
+      $('#secret').css('background-color', '');
+      $('#secret').val('');
+    }
+
+    function getGhosts() {
+      var ghostsAPI = 'https://private-f3b4b-interview2.apiary-mock.com/data';
+      $.getJSON( ghostsAPI ).done(function( data ) {
+        $('#ghosts').append($.map(data, createRow));
+      });
+    }
+
+    function createRow(ghost){
+      
+      return (
+        $('<div class="row ghost">').append(
+          $('<div class="col-md-2 col-xs-12">').append(
+            $('<img class="img-responsive images" >').attr('src', ghost.image)),
+            $('<div class="col-md-10 col-xs-12">').append(
+              $('<div class="row">').append(
+                $('<h1></h1>').text(ghost.name.toUpperCase())),
+              $('<div class="row">').append(
+                $('<h5></h5>').text(formatDate(ghost.timestamp))))).on('click', handleClick)
+      );
+
+      function handleClick(event) {
+        $('#secret').val(ghost.secret)
+        $('#secret').css('background-color', ghost.secret)
+      }
+
+    }
+
+    function formatDate(timestamp) {
+      var date = new Date(+timestamp);
+      return (date.getMonth()+1) + '/' + date.getDate() +'/' + date.getFullYear();
+    }
+
+  })();
+  </script>
+</body>
+</html>
