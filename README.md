@@ -5,8 +5,7 @@ API URL: https://private-f3b4b-interview2.apiary-mock.com/data
 Use: Bootstrap, Jquery, SCSS, HTML
 
 
-Task:
-
+# Task:
 
 * Either set up a web server to handle this or do it entirely front end.  Up to you.
 
